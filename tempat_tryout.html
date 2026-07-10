@@ -85,11 +85,16 @@
     <script>
         const BANK_SOAL = {
             'skd1': [
-                { id: 1, category: 'twk', question: 'Nasionalisme merupakan paham yang menempatkan kepentingan bangsa dan negara di atas kepentingan pribadi maupun golongan. Dalam kehidupan masyarakat...', options: {a: 'Opsi A', b: 'Opsi B', c: 'Opsi C', d: 'Opsi D', e: 'Opsi E'}, answer: 'a' },
-                { id: 2, category: 'twk', question: 'Indonesia dikenal sebagai negara yang memiliki keberagaman suku, agama, ras, bahasa, dan budaya. Kondisi tersebut merupakan kekayaan bangsa yang...', options: {a: 'Opsi A', b: 'Opsi B', c: 'Opsi C', d: 'Opsi D', e: 'Opsi E'}, answer: 'b' },
+                { id: 1, category: 'twk', question: 'Nasionalisme merupakan paham yang menempatkan kepentingan bangsa dan negara di atas kepentingan pribadi maupun golongan. Dalam kehidupan masyarakat, sikap nasionalisme dapat ditunjukkan melalui?', options: {a: 'Memberi prioritas kepada keluarga sendiri', b: 'Bekerja keras untuk kemajuan bangsa', c: 'Mengutamakan keuntungan pribadi', d: 'Menolak bantuan dari negara lain', e: 'Memilih produk luar negeri'}, answer: 'b' },
+                { id: 2, category: 'twk', question: 'Indonesia dikenal sebagai negara yang memiliki keberagaman suku, agama, ras, bahasa, dan budaya. Kondisi tersebut merupakan kekayaan bangsa yang harus dijaga. Sikap yang tepat untuk menghormati keberagaman adalah?', options: {a: 'Memaksa semua orang memiliki budaya yang sama', b: 'Menganggap budaya sendiri paling baik', c: 'Menghargai perbedaan dan bekerja sama', d: 'Menolak budaya yang berbeda', e: 'Membeda-bedakan orang berdasarkan agama'}, answer: 'c' },
                 { id: 3, category: 'tiu', question: 'Jika 2x + 3 = 11, maka x adalah?', options: {a: '2', b: '3', c: '4', d: '5', e: '6'}, answer: 'c' },
                 { id: 4, category: 'tiu', question: 'Sinonim kata "cekatan" adalah?', options: {a: 'Lambat', b: 'Gesit', c: 'Berat', d: 'Takut', e: 'Lelah'}, answer: 'b' },
-                { id: 5, category: 'tkp', question: 'Saat bekerja dalam tim, sikap terbaik Anda adalah?', options: {a: 'Bekerja sendiri', b: 'Kolaborasi dengan tim', c: 'Mendominasi keputusan', d: 'Menunggu instruksi', e: 'Mengabaikan masukan'}, answer: 'b' }
+                { id: 5, category: 'tkp', question: 'Saat bekerja dalam tim, sikap terbaik Anda adalah?', options: {a: 'Bekerja sendiri tanpa mendengarkan masukan', b: 'Kolaborasi dengan tim secara aktif', c: 'Mendominasi keputusan tim', d: 'Hanya mengikuti apa yang diminta', e: 'Menghindari tanggung jawab'}, answer: 'b' },
+                { id: 6, category: 'twk', question: 'Integritas adalah sikap jujur dan konsisten dalam menjalankan nilai-nilai moral. Contoh tindakan yang menunjukkan integritas adalah?', options: {a: 'Berbohong untuk mendapat keuntungan', b: 'Konsisten dengan prinsip meski sulit', c: 'Menyuap pejabat untuk kepentingan pribadi', d: 'Mencontek saat ujian', e: 'Melanggar janji untuk alasan apapun'}, answer: 'b' },
+                { id: 7, category: 'tiu', question: 'Jika A lebih tua dari B, dan B lebih tua dari C, maka?', options: {a: 'C lebih tua dari A', b: 'A lebih tua dari C', c: 'B dan C sama usia', d: 'C lebih tua dari B', e: 'Tidak bisa ditentukan'}, answer: 'b' },
+                { id: 8, category: 'tiu', question: 'Antonim dari kata "kemurahan" adalah?', options: {a: 'Kesedihan', b: 'Kegemerlapan', c: 'Kekikiran', d: 'Kegembiran', e: 'Kemeriahan'}, answer: 'c' },
+                { id: 9, category: 'tkp', question: 'Ketika mendapat kritik dari atasan, reaksi terbaik Anda adalah?', options: {a: 'Langsung marah dan melawan', b: 'Menerima dan belajar dari kritik', c: 'Membuat alasan dan membela diri', d: 'Diam dan mengabaikan', e: 'Mengadu ke yang lain'}, answer: 'b' },
+                { id: 10, category: 'twk', question: 'Salah satu nilai pancasila yang penting adalah keadilan sosial. Tindakan yang mencerminkan nilai ini adalah?', options: {a: 'Memberi hak khusus kepada golongan tertentu', b: 'Memperlakukan semua orang dengan adil dan sama', c: 'Mengabaikan hak orang yang berbeda paham', d: 'Memberi lebih banyak kepada yang kaya', e: 'Mengutamakan kepentingan pribadi'}, answer: 'b' }
             ]
         };
 
@@ -97,10 +102,23 @@
         const daftarSoal = BANK_SOAL[paketAktif];
         let indeksAktif = 0;
         let dataJawabanUser = {};
-        let waktuSisa = 100 * 60; // 100 menit dalam detik
+        let waktuSisa = 100 * 60;
         let intervalTimer = null;
+        const username = localStorage.getItem('username');
+
+        function cekStatusTryout() {
+            const statusKey = `tryout_${paketAktif}_status_${username}`;
+            const status = localStorage.getItem(statusKey);
+            if (status === 'completed') {
+                alert('Anda sudah menyelesaikan tryout ini. Tidak bisa mengerjakan ulang.');
+                window.location.href = 'halamansiswa.html';
+                return false;
+            }
+            return true;
+        }
 
         window.onload = function() {
+            if (!cekStatusTryout()) return;
             renderNavigasiSidebar();
             tampilkanSoal(0);
             mulaiTimer();
@@ -208,23 +226,55 @@
             if (confirm('Apakah Anda yakin ingin keluar? Semua progress pengerjaan saat ini tidak akan disimpan.')) {
                 window.location.href = 'skd.html';
             } else {
-                mulaiTimer(); // Lanjutkan timer jika membatalkan keluar
+                mulaiTimer();
             }
         }
 
         function selesaiTryOut() {
             clearInterval(intervalTimer);
             if (!confirm('Apakah Anda yakin ingin menyelesaikan simulasi Try Out ini?')) {
-                mulaiTimer(); // Lanjutkan timer jika membatalkan selesai
+                mulaiTimer();
                 return;
             }
             
-            // Simpan data jawaban ke localStorage
-            localStorage.setItem('dataJawabanUser', JSON.stringify(dataJawabanUser));
-            localStorage.setItem('daftarSoal', JSON.stringify(daftarSoal));
+            let benar = 0, salah = 0, kosong = 0;
+            let scoreTWK = 0, scoreTIU = 0, scoreTKP = 0;
             
-            // Redirect ke halaman hasil
-            window.location.href = 'hasil_tryout.html';
+            daftarSoal.forEach(soal => {
+                const jawaban = dataJawabanUser[soal.id];
+                if (!jawaban) {
+                    kosong++;
+                } else if (jawaban === soal.answer) {
+                    benar++;
+                    if (soal.category === 'twk') scoreTWK += 30;
+                    else if (soal.category === 'tiu') scoreTIU += 17.5;
+                    else if (soal.category === 'tkp') scoreTKP += 22.5;
+                } else {
+                    salah++;
+                }
+            });
+            
+            const totalSkor = scoreTWK + scoreTIU + scoreTKP;
+            const passed = scoreTWK >= 65 && scoreTIU >= 80 && scoreTKP >= 166;
+            
+            const tryoutData = {
+                completed: true,
+                score: Math.round(totalSkor),
+                benar: benar,
+                salah: salah,
+                kosong: kosong,
+                scoreTWK: Math.round(scoreTWK),
+                scoreTIU: Math.round(scoreTIU),
+                scoreTKP: Math.round(scoreTKP),
+                passed: passed,
+                jawabanUser: dataJawabanUser,
+                timestamp: new Date().toISOString()
+            };
+            
+            localStorage.setItem(`tryout_${paketAktif}_data_${username}`, JSON.stringify(tryoutData));
+            localStorage.setItem(`tryout_${paketAktif}_status_${username}`, 'completed');
+            
+            window.location.href = `hasiltryout.html?id=${paketAktif}`;
         }
     </script>
 </body>
