@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <title>Hasil Tryout SKD</title>
     <style>
         * {
@@ -12,13 +12,20 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+        }
+
         body {
             background-color: #FFEAEF;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px 0;
+            padding: 15px;
             color: #333;
+            min-height: 100vh;
         }
 
         body.completed {
@@ -34,25 +41,27 @@
         .card-summary {
             background: #ffffff;
             border-radius: 20px;
-            padding: 30px 20px;
+            padding: 25px 15px;
             text-align: center;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            margin-bottom: 25px;
+            margin-bottom: 20px;
+            width: 100%;
         }
 
         .circle-score {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
             border: 4px solid #FFEAEF;
             border-top: 4px solid #D12B57;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 48px;
+            margin: 0 auto 15px;
+            font-size: 42px;
             font-weight: bold;
             color: #D12B57;
+            flex-shrink: 0;
         }
 
         body.completed .circle-score {
@@ -63,15 +72,19 @@
 
         .card-summary h2 {
             color: #2C3E50;
-            font-size: 24px;
+            font-size: 20px;
             margin-bottom: 5px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .card-summary p.subtitle {
             color: #FF4A7A;
             font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         body.completed .card-summary p.subtitle {
@@ -81,14 +94,17 @@
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 15px;
+            width: 100%;
         }
 
         .stat-box {
-            padding: 12px;
+            padding: 12px 8px;
             border-radius: 10px;
+            min-width: 0;
         }
+
         .stat-box.benar { background-color: #FFF0F3; color: #00B69B; }
         .stat-box.salah { background-color: #FFF0F3; color: #EF4444; }
         .stat-box.kosong { background-color: #F8F9FA; color: #6C757D; }
@@ -97,21 +113,37 @@
         body.completed .stat-box.salah { background-color: #FEE2E2; color: #DC2626; }
         body.completed .stat-box.kosong { background-color: #F0FDF4; color: #22C55E; }
 
-        .stat-num { font-size: 22px; font-weight: bold; }
-        .stat-label { font-size: 12px; color: #555; margin-top: 4px;}
+        .stat-num { 
+            font-size: 20px; 
+            font-weight: bold;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .stat-label { 
+            font-size: 11px; 
+            color: #555; 
+            margin-top: 3px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
 
         .sync-alert {
             background-color: #E6F9F3;
             color: #10B981;
             border: 1px solid #A7F3D0;
-            padding: 10px;
+            padding: 10px 12px;
             border-radius: 8px;
-            font-size: 13px;
-            margin-bottom: 25px;
+            font-size: 12px;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 5px;
+            text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            width: 100%;
         }
 
         .sync-alert.not-completed {
@@ -123,74 +155,103 @@
         .btn-group {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
+            width: 100%;
+            padding: 0 5px;
         }
 
         .btn {
-            padding: 12px 20px;
+            padding: 11px 16px;
             border: none;
             border-radius: 10px;
-            font-size: 14px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
             transition: background 0.2s;
             text-decoration: none;
+            white-space: nowrap;
+            text-align: center;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1 1 calc(50% - 4px);
         }
 
         .btn-pink { background-color: #FF4A7A; color: white; }
         .btn-pink:hover { background-color: #E03E67; }
-        .btn-full { width: 75%; }
+        .btn-pink:active { background-color: #C92A52; }
+
+        .btn-full { width: 100%; flex: 1 1 100%; }
 
         .card-detail {
             background: #ffffff;
             border-radius: 12px;
-            padding: 35px 25px;
+            padding: 20px 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         .card-detail h3 {
             text-align: center;
             color: #34495E;
-            font-size: 22px;
-            margin-bottom: 20px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .alert-failed {
             background-color: #FCE8E6;
             color: #A82315;
             text-align: center;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.4;
         }
 
         .alert-success {
             background-color: #E6F9F3;
             color: #10B981;
             text-align: center;
-            padding: 12px;
+            padding: 10px 12px;
             border-radius: 6px;
             font-weight: bold;
-            font-size: 15px;
-            margin-bottom: 20px;
+            font-size: 13px;
+            margin-bottom: 15px;
             letter-spacing: 0.5px;
             display: none;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin-top: 10px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 15px;
-            font-size: 13.5px;
+            font-size: 12px;
+            min-width: 400px;
         }
 
         th, td {
             border: 1px solid #E2E8F0;
-            padding: 14px 10px;
+            padding: 12px 8px;
             text-align: center;
         }
 
@@ -198,6 +259,7 @@
             background-color: #EDF2F7;
             color: #4A5568;
             font-weight: bold;
+            font-size: 11px;
         }
 
         body.completed th {
@@ -207,6 +269,8 @@
         td.materi-name {
             text-align: left;
             color: #4A5568;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .text-bold { font-weight: bold; }
@@ -216,10 +280,230 @@
 
         tr.total-row {
             background-color: #F7FAFC;
+            font-weight: bold;
         }
 
         body.completed tr.total-row {
             background-color: #E6F9F3;
+        }
+
+        /* Mobile responsif */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            .card-summary {
+                padding: 20px 12px;
+                margin-bottom: 15px;
+            }
+
+            .circle-score {
+                width: 90px;
+                height: 90px;
+                font-size: 38px;
+                margin-bottom: 12px;
+            }
+
+            .card-summary h2 {
+                font-size: 18px;
+                margin-bottom: 3px;
+            }
+
+            .card-summary p.subtitle {
+                font-size: 12px;
+                margin-bottom: 12px;
+            }
+
+            .stats-grid {
+                gap: 8px;
+                margin-bottom: 12px;
+            }
+
+            .stat-box {
+                padding: 10px 6px;
+            }
+
+            .stat-num { 
+                font-size: 18px;
+            }
+
+            .stat-label { 
+                font-size: 10px;
+                margin-top: 2px;
+            }
+
+            .sync-alert {
+                font-size: 11px;
+                padding: 8px 10px;
+                margin-bottom: 12px;
+                gap: 4px;
+            }
+
+            .btn-group {
+                gap: 6px;
+                padding: 0 3px;
+            }
+
+            .btn {
+                padding: 10px 12px;
+                font-size: 12px;
+                min-height: 40px;
+                flex: 1 1 calc(50% - 3px);
+            }
+
+            .btn-full {
+                flex: 1 1 100%;
+            }
+
+            .card-detail {
+                padding: 15px 10px;
+                margin-bottom: 20px;
+            }
+
+            .card-detail h3 {
+                font-size: 16px;
+                margin-bottom: 12px;
+            }
+
+            .alert-failed,
+            .alert-success {
+                font-size: 12px;
+                padding: 8px 10px;
+                margin-bottom: 12px;
+            }
+
+            table {
+                font-size: 11px;
+                min-width: 350px;
+            }
+
+            th, td {
+                padding: 10px 6px;
+            }
+
+            th {
+                font-size: 10px;
+            }
+
+            .table-wrapper {
+                margin-top: 8px;
+            }
+        }
+
+        @media (max-width: 320px) {
+            body {
+                padding: 8px;
+            }
+
+            .card-summary {
+                padding: 15px 10px;
+                margin-bottom: 12px;
+            }
+
+            .circle-score {
+                width: 80px;
+                height: 80px;
+                font-size: 34px;
+                border: 3px solid #FFEAEF;
+                border-top: 3px solid #D12B57;
+                margin-bottom: 10px;
+            }
+
+            .card-summary h2 {
+                font-size: 16px;
+            }
+
+            .card-summary p.subtitle {
+                font-size: 11px;
+            }
+
+            .stats-grid {
+                gap: 6px;
+            }
+
+            .stat-num { 
+                font-size: 16px;
+            }
+
+            .stat-label { 
+                font-size: 9px;
+            }
+
+            .sync-alert {
+                font-size: 10px;
+                padding: 7px 8px;
+            }
+
+            .btn {
+                padding: 9px 10px;
+                font-size: 11px;
+                min-height: 38px;
+            }
+
+            .card-detail {
+                padding: 12px 8px;
+            }
+
+            .card-detail h3 {
+                font-size: 15px;
+            }
+
+            table {
+                font-size: 10px;
+                min-width: 320px;
+            }
+
+            th, td {
+                padding: 8px 4px;
+            }
+        }
+
+        /* Tablet dan Desktop */
+        @media (min-width: 768px) {
+            .card-summary {
+                padding: 30px 25px;
+            }
+
+            .circle-score {
+                width: 120px;
+                height: 120px;
+                font-size: 48px;
+            }
+
+            .card-summary h2 {
+                font-size: 24px;
+            }
+
+            .card-summary p.subtitle {
+                font-size: 14px;
+            }
+
+            .stat-num { 
+                font-size: 22px;
+            }
+
+            .stat-label { 
+                font-size: 12px;
+            }
+
+            .btn {
+                font-size: 14px;
+                padding: 12px 20px;
+                min-height: 44px;
+            }
+
+            .card-detail {
+                padding: 35px 25px;
+            }
+
+            table {
+                font-size: 13.5px;
+            }
+
+            th, td {
+                padding: 14px 10px;
+            }
         }
     </style>
 </head>
@@ -251,7 +535,7 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-pink" onclick="window.location.href='halamansiswa.html'">Kembali ke Dashboard</button>
+                <button class="btn btn-pink btn-full" onclick="window.location.href='halamansiswa.html'">Kembali ke Dashboard</button>
             </div>
         </div>
 
@@ -264,42 +548,44 @@
                 SELAMAT! ANDA TELAH MEMENUHI PASSING GRADE
             </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Materi</th>
-                        <th>Skor Anda</th>
-                        <th>Passing Grade</th>
-                        <th>Keterangan</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <tr>
-                        <td class="materi-name">Tes Wawasan Kebangsaan (TWK)</td>
-                        <td class="text-bold text-blue" id="skorTWK">0</td>
-                        <td>65</td>
-                        <td class="text-red" id="ketTWK">TIDAK MEMENUHI</td>
-                    </tr>
-                    <tr>
-                        <td class="materi-name">Tes Inteligensia Umum (TIU)</td>
-                        <td class="text-bold text-blue" id="skorTIU">0</td>
-                        <td>80</td>
-                        <td class="text-red" id="ketTIU">TIDAK MEMENUHI</td>
-                    </tr>
-                    <tr>
-                        <td class="materi-name">Tes Karakteristik Pribadi (TKP)</td>
-                        <td class="text-bold text-blue" id="skorTKP">0</td>
-                        <td>166</td>
-                        <td class="text-red" id="ketTKP">TIDAK MEMENUHI</td>
-                    </tr>
-                    <tr class="total-row">
-                        <td class="materi-name text-bold">TOTAL SKOR AKHIR SKD</td>
-                        <td class="text-bold text-blue" id="totalSkor">0</td>
-                        <td class="text-bold">311</td>
-                        <td class="text-red" id="ketTotal">GAGAL</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Materi</th>
+                            <th>Skor Anda</th>
+                            <th>Passing Grade</th>
+                            <th>Keterangan</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <tr>
+                            <td class="materi-name">Tes Wawasan Kebangsaan (TWK)</td>
+                            <td class="text-bold text-blue" id="skorTWK">0</td>
+                            <td>65</td>
+                            <td class="text-red" id="ketTWK">TIDAK MEMENUHI</td>
+                        </tr>
+                        <tr>
+                            <td class="materi-name">Tes Inteligensia Umum (TIU)</td>
+                            <td class="text-bold text-blue" id="skorTIU">0</td>
+                            <td>80</td>
+                            <td class="text-red" id="ketTIU">TIDAK MEMENUHI</td>
+                        </tr>
+                        <tr>
+                            <td class="materi-name">Tes Karakteristik Pribadi (TKP)</td>
+                            <td class="text-bold text-blue" id="skorTKP">0</td>
+                            <td>166</td>
+                            <td class="text-red" id="ketTKP">TIDAK MEMENUHI</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td class="materi-name text-bold">TOTAL SKOR AKHIR SKD</td>
+                            <td class="text-bold text-blue" id="totalSkor">0</td>
+                            <td class="text-bold">311</td>
+                            <td class="text-red" id="ketTotal">GAGAL</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
