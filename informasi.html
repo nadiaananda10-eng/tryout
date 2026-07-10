@@ -9,30 +9,55 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         body { background-color: #fbd6e6; min-height: 100vh; }
-        .navbar { background-color: #e56ba3; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000000; }
+        .navbar { background-color: #e56ba3; padding: 15px 4%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000000; flex-wrap: wrap; gap: 10px; }
         .logo-area { display: flex; align-items: center; gap: 12px; }
         .logo-img { width: 45px; height: 45px; object-fit: contain; }
         .logo-text { color: #ffffff; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; }
-        .nav-menu { display: flex; gap: 20px; }
-        .nav-btn { padding: 8px 35px; border: 2px solid #000000; border-radius: 20px; font-weight: 600; text-decoration: none; color: #000000; font-size: 0.95rem; box-shadow: 0 4px 0px #000000; transition: all 0.1s ease; }
+        .nav-menu { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+        .nav-btn { padding: 8px 16px; border: 2px solid #000000; border-radius: 20px; font-weight: 600; text-decoration: none; color: #000000; font-size: 0.85rem; box-shadow: 0 4px 0px #000000; transition: all 0.1s; white-space: nowrap; }
         .nav-btn.white { background-color: #ffffff; }
         .nav-btn.active { background-color: #fca1d9; }
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-        .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
-        .post-card { background-color: #fff1f5; border: 3px solid #000000; border-radius: 12px; box-shadow: 8px 8px 0px #000000; display: flex; flex-direction: column; overflow: hidden; text-decoration: none; color: #000000; transition: transform 0.1s ease, box-shadow 0.1s ease; }
-        .post-card.has-link:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0px #000000; }
-        .post-header { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000000; background-color: #fff1f5; }
-        .avatar-dot { width: 22px; height: 22px; background-color: #ccff00; border: 2px solid #000000; border-radius: 50%; }
-        .more-dots { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; }
+        .nav-btn:active { transform: translateY(2px); box-shadow: 0 2px 0px #000000; }
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 12px; }
+        .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+        .post-card { background-color: #fff1f5; border: 2px solid #000000; border-radius: 8px; box-shadow: 4px 4px 0px #000000; display: flex; flex-direction: column; overflow: hidden; text-decoration: none; cursor: pointer; transition: all 0.1s; }
+        .post-card:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000000; }
+        .post-header { padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #000000; background-color: #fff1f5; }
+        .avatar-dot { width: 16px; height: 16px; background-color: #ccff00; border: 2px solid #000000; border-radius: 50%; }
+        .more-dots { font-size: 1rem; font-weight: 700; letter-spacing: 1px; }
         .post-body { width: 100%; aspect-ratio: 1 / 1; background-color: #fff1f5; position: relative; display: flex; justify-content: center; align-items: center; }
         .post-img { width: 100%; height: 100%; object-fit: cover; }
-        .no-info-box { font-size: 1.1rem; font-weight: 700; color: #7a7a7a; text-align: center; padding: 20px; letter-spacing: 1px; text-transform: uppercase; }
-        .post-footer { padding: 12px 15px; display: flex; justify-content: space-between; align-items: center; border-top: 3px solid #000000; background-color: #fff1f5; font-size: 1.3rem; }
-        .footer-left { display: flex; gap: 15px; }
+        .no-info-box { font-size: 0.75rem; font-weight: 700; color: #7a7a7a; text-align: center; padding: 10px; letter-spacing: 0.5px; text-transform: uppercase; }
+        .post-footer { padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; border-top: 2px solid #000000; background-color: #fff1f5; font-size: 0.9rem; }
+        .footer-left { display: flex; gap: 10px; }
         .fa-heart { color: #ff4785; }
         .fa-comment { color: #ccff00; }
         .fa-paper-plane { color: #a182ff; }
         .fa-bookmark { color: #ccff00; }
+        
+        @media (min-width: 576px) {
+            .navbar { padding: 15px 4%; }
+            .nav-btn { padding: 8px 20px; font-size: 0.88rem; }
+            .container { padding: 0 16px; margin: 30px auto; }
+            .info-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 18px; }
+            .post-card { border: 2px solid #000000; box-shadow: 6px 6px 0px #000000; }
+            .post-header { padding: 10px 12px; }
+            .avatar-dot { width: 18px; height: 18px; }
+            .post-footer { padding: 10px 12px; font-size: 1rem; }
+            .no-info-box { font-size: 0.85rem; padding: 15px; }
+        }
+        
+        @media (min-width: 768px) {
+            .navbar { padding: 15px 5%; gap: 15px; }
+            .nav-btn { padding: 8px 28px; font-size: 0.9rem; }
+            .container { padding: 0 20px; margin: 40px auto; }
+            .info-grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 30px; }
+            .post-card { border: 3px solid #000000; box-shadow: 8px 8px 0px #000000; }
+            .post-header { padding: 12px 15px; border-bottom: 3px solid #000000; }
+            .avatar-dot { width: 22px; height: 22px; }
+            .post-footer { padding: 12px 15px; border-top: 3px solid #000000; font-size: 1.3rem; }
+            .no-info-box { font-size: 1.1rem; padding: 20px; }
+        }
     </style>
 </head>
 <body>
