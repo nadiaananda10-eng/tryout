@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Nexora Academy</title>
+    <!-- Font Awesome untuk Icon Input -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts untuk Font yang rapi -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Reset & Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #ff69b4;
+            overflow-x: hidden;
+        }
+
+        .login-container {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* ==========================================================================
+           SEBELAH KIRI: VIDEO SECTION (Desktop)
+           ========================================================================== */
+        .video-section {
+            flex: 1.1;
+            position: relative;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .bg-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ==========================================================================
+           SEBELAH KANAN: FORM SECTION
+           ========================================================================== */
+        .form-section {
+            flex: 0.9;
+            background-color: #ff6c8cac;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .form-wrapper {
+            width: 100%;
+            max-width: 420px;
+            text-align: center;
+        }
+
+        /* Tipografi Judul */
+        .title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            text-shadow: -1px -1px 0 #333, 1px -1px 0 #333, -1px 1px 0 #333, 1px 1px 0 #333;
+            margin-bottom: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 40px;
+        }
+
+        /* Input Fields Styling */
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px 45px;
+            border-radius: 50px;
+            border: 2px solid #000000;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Icon di dalam Input */
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            font-size: 1.1rem;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #555;
+            cursor: pointer;
+        }
+
+        /* Opsi Tambahan (Remember & Forgot) */
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #ffffff;
+            margin-bottom: 30px;
+            padding: 0 5px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Tombol Masuk */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background-color: #ffd200;
+            border: 2px solid #000000;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000000;
+            cursor: pointer;
+            box-shadow: 0 4px 0px #000000;
+            transition: all 0.1s ease;
+        }
+
+        .btn-submit:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0px #000000;
+        }
+
+        /* Pesan Error Login */
+        .error-message {
+            color: #ffd200;
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: none; /* Sembunyi sebelum ada error */
+            text-shadow: 1px 1px 0 #000;
+        }
+
+        /* ==========================================================================
+           RESPONSIVE (TAMPILAN HP)
+           ========================================================================== */
+        @media (max-width: 768px) {
+            .video-section { display: none; }
+            .form-section { flex: 1; padding: 20px; }
+            .title { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="login-container">
+        <!-- SEBELAH KIRI: KONTEN VIDEO -->
+        <div class="video-section">
+            <video autoplay muted loop controls class="bg-video">
+                <source src="nexoraopening.mp4" type="video/mp4">
+                Browser kamu tidak mendukung video HTML5.
+            </video>
+        </div>
+
+        <!-- SEBELAH KANAN: FORM LOGIN -->
+        <div class="form-section">
+            <div class="form-wrapper">
+                <h1 class="title">Selamat Datang</h1>
+                <p class="subtitle">Di Nexora Academy</p>
+
+                <!-- Tempat Muncul Pesan Gagal Login -->
+                <div class="error-message" id="errorMessage">Nama Akun atau Kata Sandi salah!</div>
+
+                <form id="loginForm">
+                    <!-- Input Nama Akun -->
+                    <div class="input-group">
+                        <i class="fa-regular fa-user input-icon"></i>
+                        <input type="text" id="usernameInput" placeholder="Nama Akun" required>
+                    </div>
+
+                    <!-- Input Kata Sandi -->
+                    <div class="input-group">
+                        <i class="fa-solid fa-lock input-icon"></i>
+                        <input type="password" id="passwordInput" placeholder="Kata Sandi" required>
+                        <i class="fa-regular fa-eye-slash toggle-password" id="togglePassword"></i>
+                    </div>
+
+                    <!-- Fitur Tambahan -->
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox"> Ingat Kata Sandi
+                        </label>
+                        <a href="#" class="forgot-password">Lupa Kata Sandi</a>
+                    </div>
+
+                    <!-- Tombol Masuk -->
+                    <button type="submit" class="btn-submit">Masuk</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==========================================================================
+        //  DAFTAR AKUN SISWA (Kamu bisa tambah, ubah, atau hapus di sini sepuasnya!)
+        // ==========================================================================
+        const daftarAkun = [
+            { username: "budi", password: "passwordbudi123", namaLengkap: "Budi Santoso" },
+            { username: "siti", password: "sitinexora2026", namaLengkap: "Siti Rahma" },
+            { username: "admin", password: "adminnexora", namaLengkap: "Administrator" },
+            { username: "siswa1", password: "rahasia1", namaLengkap: "Siswa Perdana" },
+            // Ikuti pola di atas kalau mau nambah akun baru:
+            // { username: "username_baru", password: "password_baru", namaLengkap: "Nama Yang Muncul Di Dashboard" }
+        ];
+
+        // Fungsi Intip/Sembunyi Password
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#passwordInput');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // Logika Validasi Login Banyak Akun
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Mencegah page reload otomatis
+            
+            const usernameDiketik = document.getElementById('usernameInput').value.trim();
+            const passwordDiketik = document.getElementById('passwordInput').value;
+            const errorDiv = document.getElementById('errorMessage');
+
+            // Cari apakah ada akun yang cocok di dalam daftarAkun
+            const akunDitemukan = daftarAkun.find(akun => 
+                akun.username.toLowerCase() === usernameDiketik.toLowerCase() && 
+                akun.password === passwordDiketik
+            );
+
+            if (akunDitemukan) {
+                // Jika sukses, simpan nama lengkapnya ke memori browser
+                localStorage.setItem('username', akunDitemukan.namaLengkap);
+                errorDiv.style.display = 'none';
+                
+                // Pindah ke halaman siswa
+                window.location.href = 'halamansiswa.html';
+            } else {
+                // Jika salah, munculkan notifikasi error berwarna kuning pop-art
+                errorDiv.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

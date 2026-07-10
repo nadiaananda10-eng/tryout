@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Academy - Konfirmasi Tryout</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           BASE STYLE & BACKGROUND
+           ========================================================================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: #fbd6e6; /* Latar pink khas Nexora */
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* ==========================================================================
+           CONTAINER UTAMA (SESUAI MOCKUP GAMBAR)
+           ========================================================================== */
+        .modal-box {
+            background-color: #fff1f5;
+            border: 5px solid #1e1e1e;
+            border-radius: 35px;
+            padding: 50px 40px;
+            width: 100%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 12px 0px #1e1e1e;
+            position: relative;
+        }
+
+        /* Judul Bergaya 3D Retro Pink */
+        .modal-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #b02663;
+            text-transform: uppercase;
+            margin-bottom: 35px;
+            letter-spacing: 1px;
+            text-shadow: 2px 2px 0px #ffffff, 5px 5px 0px #1e1e1e;
+        }
+
+        /* Input Sandi Oval Bergradasi */
+        .input-container {
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #inputSandi {
+            width: 85%;
+            padding: 14px 25px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-align: center;
+            border: 3px solid #fca1d9;
+            border-radius: 30px;
+            background: linear-gradient(to right, #ffffff, #fff0f5);
+            outline: none;
+            color: #b02663;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        #inputSandi::placeholder {
+            color: #b02663;
+            opacity: 0.6;
+        }
+
+        /* Group Tombol Horizontal */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .m-btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #ffffff;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .m-btn:active { 
+            transform: scale(0.95); 
+        }
+
+        .btn-kembali { background-color: #64748b; }
+        .btn-mulai { background-color: #ff528c; }
+        .btn-ranking { background-color: #2a7a5c; }
+
+        /* ==========================================================================
+           LAYERS HITUNG MUNDUR (COUNTDOWN LAYER)
+           ========================================================================== */
+        .countdown-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #fbd6e6;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .countdown-number {
+            font-size: 10rem;
+            font-weight: 700;
+            color: #ff528c;
+            text-shadow: 5px 5px 0px #1e1e1e;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- KOTAK UTAMA -->
+    <div class="modal-box">
+        <!-- Nama Paket akan Berubah Otomatis Melalui JavaScript -->
+        <h2 class="modal-title" id="displayJudul">TRY OUT 1 SKD</h2>
+        
+        <div class="input-container">
+            <input type="text" id="inputSandi" placeholder="Sandi Try Out">
+        </div>
+
+        <div class="btn-group">
+            <button class="m-btn btn-kembali" onclick="kembaliKeAsal()">Kembali</button>
+            <button class="m-btn btn-mulai" onclick="prosesValidasi()">Mulai Tryout</button>
+            <button class="m-btn btn-ranking">Dashboard Ranking</button>
+        </div>
+    </div>
+
+    <!-- OVERLAY HITUNG MUNDUR -->
+    <div class="countdown-overlay" id="countdownOverlay">
+        <div class="countdown-number" id="countdownNumber">3</div>
+    </div>
+
+    <!-- LOGIKA DETEKSI URL, VALIDASI SANDI, & ANIMASI -->
+    <script>
+        // 1. DATA DATABASE SANDI UNTUK SEMUA PAKET (SKD, UTBK, TKA)
+        const databaseSandi = {
+            // Sandi untuk Paket SKD
+            "tryout skd 1": "SKD1",
+            "tryout skd 2": "SKD2",
+            "tryout skd 3": "SKD3",
+            "tryout skd 4": "SKD4",
+            "tryout skd 5": "SKD5",
+
+            // Sandi untuk Paket UTBK
+            "try out utbk 1": "UTBK1",
+            "try out utbk 2": "UTBK2",
+            "try out utbk 3": "UTBK3",
+            "try out utbk 4": "UTBK4",
+            "try out utbk 5": "UTBK5",
+
+            // Sandi untuk Paket TKA
+            "try out tka 1": "TKA1",
+            "try out tka 2": "TKA2",
+            "try out tka 3": "TKA3"
+        };
+
+        // 2. Ambil parameter nama & kategori dari URL browser
+        const urlParams = new URLSearchParams(window.location.search);
+        const namaPaket = urlParams.get('nama') || "TRY OUT 1 SKD";
+        const kategoriAsal = urlParams.get('kategori') || "skd"; // Untuk tombol kembali
+
+        // Tampilkan nama paket ke elemen judul HTML
+        document.getElementById('displayJudul').innerText = namaPaket;
+
+        // 3. Fungsi Tombol Kembali (Mengarahkan kembali ke halaman pengirim)
+        function kembaliKeAsal() {
+            window.location.href = `${kategoriAsal}.html`;
+        }
+
+        // 4. Fungsi Validasi Sandi dan Animasi Hitung Mundur
+        function prosesValidasi() {
+            const inputUser = document.getElementById('inputSandi').value.trim();
+            const kunciSandiMurni = namaPaket.toLowerCase().trim();
+            
+            // Ambil kecocokan sandi dari database berdasarkan nama paket
+            const sandiBenar = databaseSandi[kunciSandiMurni];
+
+            if (inputUser === sandiBenar) {
+                // Jika Sandi Benar -> Jalankan Efek Hitung Mundur 3, 2, 1
+                const overlay = document.getElementById('countdownOverlay');
+                const angkaCountdown = document.getElementById('countdownNumber');
+                
+                overlay.style.display = "flex";
+                let angka = 3;
+                angkaCountdown.innerText = angka;
+
+                const hitungMundurInterval = setInterval(() => {
+                    angka--;
+                    if (angka > 0) {
+                        angkaCountdown.innerText = angka;
+                    } else {
+                        clearInterval(hitungMundurInterval);
+                        // Ganti dengan file halaman tempat ujian sesungguhnya
+                        window.location.href = `tempat_tryout.html?paket=${encodeURIComponent(namaPaket)}`;
+                    }
+                }, 1000);
+
+            } else {
+                // Jika Sandi Salah
+                alert("Sandi Salah! Silakan masukkan sandi yang sesuai untuk " + namaPaket);
+            }
+        }
+    </script>
+</body>
+</html>

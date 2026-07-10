@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengerjaan Try Out SKD</title>
+    <style>
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .main-container { display: flex; max-width: 1200px; margin: 0 auto; gap: 20px; }
+        .soal-section { flex: 3; background: #ffffff; padding: 25px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .soal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f0f0f0; }
+        .badge-kategori { background: #e0e0e0; padding: 6px 12px; border-radius: 20px; font-size: 0.85rem; font-weight: bold; text-transform: uppercase; color: #555; }
+        .soal-teks { font-size: 1.15rem; line-height: 1.6; margin-bottom: 25px; color: #222; }
+        .pilihan-container { display: flex; flex-direction: column; gap: 12px; }
+        .pilihan-item { display: flex; align-items: center; padding: 14px 18px; border: 1px solid #ddd; border-radius: 8px; cursor: pointer; transition: all 0.2s ease; background: #fff; }
+        .pilihan-item:hover { background: #f7f9fc; border-color: #b3d4fc; }
+        .pilihan-item.selected { background-color: #e8f0fe; border-color: #2196f3; font-weight: 500; }
+        .pilihan-item input { margin-right: 15px; transform: scale(1.3); cursor: pointer; }
+        .nav-buttons { display: flex; justify-content: space-between; margin-top: 30px; padding-top: 15px; border-top: 1px solid #f0f0f0; }
+        .sidebar-section { flex: 1; background: #ffffff; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); height: fit-content; }
+        .sidebar-title { font-size: 1.1rem; font-weight: bold; margin-top: 0; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee; }
+        .kategori-box { margin-bottom: 20px; }
+        .kategori-box h4 { margin: 0 0 10px 0; font-size: 0.9rem; text-transform: uppercase; padding-left: 8px; }
+        .twk-title { border-left: 4px solid #ff5722; color: #d03b0d; }
+        .tiu-title { border-left: 4px solid #2196f3; color: #1175c4; }
+        .tkp-title { border-left: 4px solid #4caf50; color: #2e7d32; }
+        .grid-nomor { display: flex; flex-wrap: wrap; gap: 8px; }
+        .btn-nomor { width: 38px; height: 38px; border-radius: 6px; border: 1px solid #ccc; background: #f8f9fa; color: #333; font-weight: 600; cursor: pointer; transition: 0.15s; font-size: 0.9rem; }
+        .btn-nomor.terjawab { background-color: #4caf50; color: white; border-color: #4caf50; }
+        .btn-nomor.aktif { border: 2.5px solid #6200ea; box-shadow: 0 0 5px rgba(98, 0, 234, 0.4); }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 0.95rem; transition: 0.2s; }
+        .btn-primary { background-color: #3f51b5; color: white; }
+        .btn-primary:hover { background-color: #303f9f; }
+        .btn-primary:disabled { background-color: #ccc; cursor: not-allowed; }
+        .btn-success { background-color: #4caf50; color: white; }
+        .btn-success:hover { background-color: #388e3c; }
+        .btn-danger { background-color: #f44336; color: white; }
+        .btn-danger:hover { background-color: #d32f2f; }
+        .hidden { display: none !important; }
+        .timer-box { background: #ff6b6b; color: white; padding: 12px 18px; border-radius: 8px; font-weight: bold; text-align: center; min-width: 120px; }
+        .timer-box.warning { background: #ffa500; }
+        .timer-box.critical { background: #ff3333; animation: blink 0.5s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0.5; } }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="soal-section">
+            <div class="soal-header">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div>
+                        <span id="info-nomor-soal" style="font-size: 1.25rem; font-weight: bold;">Soal Nomor 1</span>
+                        <span id="info-kategori" class="badge-kategori">TWK</span>
+                    </div>
+                    <div id="timer" class="timer-box">100:00</div>
+                </div>
+                <button class="btn btn-danger" onclick="keluarTryOut()">🚪 Keluar Try Out</button>
+            </div>
+            <div id="teks-soal" class="soal-teks">Membaca bank soal...</div>
+            <div id="pilihan-jawaban" class="pilihan-container"></div>
+            <div class="nav-buttons">
+                <button id="btn-sebelumnya" class="btn btn-primary" onclick="pindahSoal(indeksAktif - 1)">◀ Sebelumnya</button>
+                <button id="btn-selanjutnya" class="btn btn-primary" onclick="pindahSoal(indeksAktif + 1)">Selanjutnya ▶</button>
+                <button id="btn-selesai" class="btn btn-success hidden" onclick="selesaiTryOut()">✔ Selesai & Lihat Hasil</button>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-title">Navigasi Soal</div>
+            <div class="kategori-box">
+                <h4 class="twk-title">TWK (Nasionalisme & Integritas)</h4>
+                <div id="grid-twk" class="grid-nomor"></div>
+            </div>
+            <div class="kategori-box">
+                <h4 class="tiu-title">TIU (Inteligensia Umum)</h4>
+                <div id="grid-tiu" class="grid-nomor"></div>
+            </div>
+            <div class="kategori-box">
+                <h4 class="tkp-title">TKP (Karakteristik Pribadi)</h4>
+                <div id="grid-tkp" class="grid-nomor"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BANK_SOAL = {
+            'skd1': [
+                { id: 1, category: 'twk', question: 'Nasionalisme merupakan paham yang menempatkan kepentingan bangsa dan negara di atas kepentingan pribadi maupun golongan. Dalam kehidupan masyarakat...', options: {a: 'Opsi A', b: 'Opsi B', c: 'Opsi C', d: 'Opsi D', e: 'Opsi E'}, answer: 'a' },
+                { id: 2, category: 'twk', question: 'Indonesia dikenal sebagai negara yang memiliki keberagaman suku, agama, ras, bahasa, dan budaya. Kondisi tersebut merupakan kekayaan bangsa yang...', options: {a: 'Opsi A', b: 'Opsi B', c: 'Opsi C', d: 'Opsi D', e: 'Opsi E'}, answer: 'b' },
+                { id: 3, category: 'tiu', question: 'Jika 2x + 3 = 11, maka x adalah?', options: {a: '2', b: '3', c: '4', d: '5', e: '6'}, answer: 'c' },
+                { id: 4, category: 'tiu', question: 'Sinonim kata "cekatan" adalah?', options: {a: 'Lambat', b: 'Gesit', c: 'Berat', d: 'Takut', e: 'Lelah'}, answer: 'b' },
+                { id: 5, category: 'tkp', question: 'Saat bekerja dalam tim, sikap terbaik Anda adalah?', options: {a: 'Bekerja sendiri', b: 'Kolaborasi dengan tim', c: 'Mendominasi keputusan', d: 'Menunggu instruksi', e: 'Mengabaikan masukan'}, answer: 'b' }
+            ]
+        };
+
+        const paketAktif = 'skd1';
+        const daftarSoal = BANK_SOAL[paketAktif];
+        let indeksAktif = 0;
+        let dataJawabanUser = {};
+        let waktuSisa = 100 * 60; // 100 menit dalam detik
+        let intervalTimer = null;
+
+        window.onload = function() {
+            renderNavigasiSidebar();
+            tampilkanSoal(0);
+            mulaiTimer();
+        };
+
+        function mulaiTimer() {
+            intervalTimer = setInterval(() => {
+                waktuSisa--;
+                updateTampilanTimer();
+                
+                if (waktuSisa <= 0) {
+                    clearInterval(intervalTimer);
+                    selesaiTryOut();
+                }
+            }, 1000);
+        }
+
+        function updateTampilanTimer() {
+            const menit = Math.floor(waktuSisa / 60);
+            const detik = waktuSisa % 60;
+            const tampilan = `${String(menit).padStart(2, '0')}:${String(detik).padStart(2, '0')}`;
+            const timerBox = document.getElementById('timer');
+            timerBox.textContent = tampilan;
+            
+            if (waktuSisa <= 60) {
+                timerBox.classList.add('critical');
+                timerBox.classList.remove('warning');
+            } else if (waktuSisa <= 300) {
+                timerBox.classList.add('warning');
+                timerBox.classList.remove('critical');
+            } else {
+                timerBox.classList.remove('warning', 'critical');
+            }
+        }
+
+        function renderNavigasiSidebar() {
+            const gridTwk = document.getElementById('grid-twk');
+            const gridTiu = document.getElementById('grid-tiu');
+            const gridTkp = document.getElementById('grid-tkp');
+            gridTwk.innerHTML = ''; gridTiu.innerHTML = ''; gridTkp.innerHTML = '';
+            
+            daftarSoal.forEach((soal, index) => {
+                const btn = document.createElement('button');
+                btn.innerText = index + 1;
+                btn.className = 'btn-nomor';
+                if (index === indeksAktif) btn.classList.add('aktif');
+                if (dataJawabanUser[soal.id]) btn.classList.add('terjawab');
+                btn.onclick = () => pindahSoal(index);
+                
+                if (soal.category === 'twk') gridTwk.appendChild(btn);
+                else if (soal.category === 'tiu') gridTiu.appendChild(btn);
+                else if (soal.category === 'tkp') gridTkp.appendChild(btn);
+            });
+        }
+
+        function tampilkanSoal(index) {
+            if (index < 0 || index >= daftarSoal.length) return;
+            indeksAktif = index;
+            const soal = daftarSoal[index];
+            
+            document.getElementById('info-nomor-soal').innerText = `Soal Nomor ${index + 1}`;
+            const badgeKat = document.getElementById('info-kategori');
+            badgeKat.innerText = soal.category.toUpperCase();
+            document.getElementById('teks-soal').innerText = soal.question;
+            
+            const areaPilihan = document.getElementById('pilihan-jawaban');
+            areaPilihan.innerHTML = '';
+            Object.keys(soal.options).forEach(key => {
+                const isSelected = dataJawabanUser[soal.id] === key;
+                const label = document.createElement('label');
+                label.className = `pilihan-item ${isSelected ? 'selected' : ''}`;
+                label.innerHTML = `
+                    <input type="radio" name="opsi" value="${key}" ${isSelected ? 'checked' : ''}>
+                    <strong>${key.toUpperCase()}.</strong> &nbsp; ${soal.options[key]}
+                `;
+                label.onclick = () => {
+                    simpanJawaban(soal.id, key);
+                };
+                areaPilihan.appendChild(label);
+            });
+            
+            document.getElementById('btn-sebelumnya').disabled = (index === 0);
+            if (index === daftarSoal.length - 1) {
+                document.getElementById('btn-selanjutnya').classList.add('hidden');
+                document.getElementById('btn-selesai').classList.remove('hidden');
+            } else {
+                document.getElementById('btn-selanjutnya').classList.remove('hidden');
+                document.getElementById('btn-selesai').classList.add('hidden');
+            }
+            
+            renderNavigasiSidebar();
+        }
+
+        function pindahSoal(index) {
+            tampilkanSoal(index);
+        }
+
+        function simpanJawaban(soalId, hurufPilihan) {
+            dataJawabanUser[soalId] = hurufPilihan;
+            tampilkanSoal(indeksAktif);
+        }
+
+        function keluarTryOut() {
+            clearInterval(intervalTimer);
+            if (confirm('Apakah Anda yakin ingin keluar? Semua progress pengerjaan saat ini tidak akan disimpan.')) {
+                window.location.href = 'skd.html';
+            } else {
+                mulaiTimer(); // Lanjutkan timer jika membatalkan keluar
+            }
+        }
+
+        function selesaiTryOut() {
+            clearInterval(intervalTimer);
+            if (!confirm('Apakah Anda yakin ingin menyelesaikan simulasi Try Out ini?')) {
+                mulaiTimer(); // Lanjutkan timer jika membatalkan selesai
+                return;
+            }
+            
+            // Simpan data jawaban ke localStorage
+            localStorage.setItem('dataJawabanUser', JSON.stringify(dataJawabanUser));
+            localStorage.setItem('daftarSoal', JSON.stringify(daftarSoal));
+            
+            // Redirect ke halaman hasil
+            window.location.href = 'hasil_tryout.html';
+        }
+    </script>
+</body>
+</html>

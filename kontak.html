@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Academy - Kontak</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fbd6e6; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        .navbar { background-color: #e56ba3; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000000; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 45px; height: 45px; object-fit: contain; }
+        .logo-text { color: #ffffff; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; }
+        .nav-menu { display: flex; gap: 20px; }
+        .nav-btn { padding: 8px 35px; border: 2px solid #000000; border-radius: 20px; font-weight: 600; text-decoration: none; color: #000000; font-size: 0.95rem; box-shadow: 0 4px 0px #000000; transition: all 0.1s ease; }
+        .nav-btn.white { background-color: #ffffff; }
+        .nav-btn.active { background-color: #fca1d9; }
+        .main-wrapper { max-width: 1200px; width: 100%; margin: auto; padding: 40px 4%; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: center; }
+        .form-grid-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .input-group { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+        .input-group label { color: #8b7ca6; font-size: 1.1rem; font-weight: 600; }
+        .form-control { width: 100%; background-color: #ffc2db; border: none; border-radius: 25px; padding: 15px 25px; font-size: 1rem; color: #000000; outline: none; }
+        textarea.form-control { border-radius: 25px; resize: none; height: 180px; }
+        .btn-submit { background-color: #ff76a9; color: #ffffff; border: none; border-radius: 25px; padding: 12px 40px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: background-color 0.2s ease; display: inline-block; margin-top: 10px; }
+        .btn-submit:hover { background-color: #e5568f; }
+        .right-column { text-align: left; position: relative; }
+        .headline { font-size: 3.5rem; font-weight: 700; color: #615286; margin-bottom: 30px; letter-spacing: -1px; }
+        .plane-illustration { width: 100%; max-width: 420px; display: block; }
+        .footer-bar { background-color: #e56ba3; border-top: 3px solid #000000; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; }
+        .footer-item { display: flex; align-items: center; gap: 10px; color: #000000; font-size: 1.1rem; font-weight: 600; }
+        .footer-item i { font-size: 1.4rem; }
+        @media (max-width: 768px) {
+            .navbar { flex-direction: column; gap: 15px; }
+            .main-wrapper { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+            .form-grid-row { grid-template-columns: 1fr; }
+            .headline { font-size: 2.5rem; }
+            .footer-bar { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-area">
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.opacity='0'">
+            <span class="logo-text">NEXORA ACADEMY</span>
+        </div>
+        <div class="nav-menu">
+            <a href="halamansiswa.html" class="nav-btn white">Beranda</a>
+            <a href="informasi.html" class="nav-btn white">Informasi</a>
+            <a href="kontak.html" class="nav-btn active">Kontak</a>
+        </div>
+    </nav>
+    <main class="main-wrapper">
+        <form id="contactForm" name="google-sheet-form">
+            <div class="form-grid-row">
+                <div class="input-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="Nama Depan" class="form-control" required>
+                </div>
+                <div class="input-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="Nama Belakang" class="form-control" required>
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="emailAddress">Email Address</label>
+                <input type="email" id="emailAddress" name="Email" class="form-control" required>
+            </div>
+            <div class="input-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="Pesan" class="form-control" required></textarea>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">Submit</button>
+        </form>
+        <div class="right-column">
+            <h1 class="headline">Get in touch.</h1>
+            <svg class="plane-illustration" viewBox="0 0 500 350" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M40 280 L180 200 M65 295 L205 215 M90 310 L210 240" stroke="#615286" stroke-width="4" stroke-dasharray="8 8" stroke-linecap="round"/>
+                <path d="M220 220 L360 220 L270 250 Z" fill="#fff9b6" stroke="#615286" stroke-width="3"/>
+                <path d="M220 220 L465 150 L270 250 Z" fill="#7be1d1" stroke="#615286" stroke-width="3"/>
+                <path d="M320 178 L465 150 L220 220 Z" fill="#f5afc8" stroke="#615286" stroke-width="3"/>
+            </svg>
+        </div>
+    </main>
+    <footer class="footer-bar">
+        <div class="footer-item"><i class="fa-regular fa-envelope"></i><span>nexoracademy31@gmail.com</span></div>
+        <div class="footer-item"><i class="fa-brands fa-instagram"></i><span>nexoracademy_</span></div>
+        <div class="footer-item"><i class="fa-solid fa-phone"></i><span>0881 -0126 - 14584</span></div>
+    </footer>
+    <script>
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbwRVqpO_Ife-Xz9ibNTp0swUsn_8sOblsBh8GjfiVMXze7-oh0ZHhZhTMnrMadIxZ0O/exec';
+        const form = document.forms['google-sheet-form'];
+        const btnSubmit = document.getElementById('submitBtn');
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = "Sending...";
+            fetch(scriptURL, { method: 'POST', body: new FormData(form)})
+                .then(response => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = "Submit";
+                    alert('Terima kasih! Pesan Anda berhasil dikirim ke Google Sheets.');
+                    form.reset();
+                })
+                .catch(error => {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = "Submit";
+                    alert('Gagal mengirim pesan, silahkan coba lagi.');
+                    console.error('Error!', error.message);
+                });
+        });
+    </script>
+</body>
+</html>

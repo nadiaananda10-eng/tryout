@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Tryout SKD</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #FFEAEF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 0;
+            color: #333;
+        }
+
+        body.completed {
+            background-color: #E6F9F3;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 650px;
+            margin-bottom: 30px;
+        }
+
+        /* --- CARD FOTO 3: RINGKASAN HASIL --- */
+        .card-summary {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        .circle-score {
+            width: 120px;
+            height: 120px;
+            border: 4px solid #FFEAEF;
+            border-top: 4px solid #D12B57;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 48px;
+            font-weight: bold;
+            color: #D12B57;
+        }
+
+        body.completed .circle-score {
+            border: 4px solid #E6F9F3;
+            border-top: 4px solid #10B981;
+            color: #10B981;
+        }
+
+        .card-summary h2 {
+            color: #2C3E50;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .card-summary p.subtitle {
+            color: #FF4A7A;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        body.completed .card-summary p.subtitle {
+            color: #10B981;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            padding: 12px;
+            border-radius: 10px;
+        }
+        .stat-box.benar { background-color: #FFF0F3; color: #00B69B; }
+        .stat-box.salah { background-color: #FFF0F3; color: #EF4444; }
+        .stat-box.kosong { background-color: #F8F9FA; color: #6C757D; }
+
+        body.completed .stat-box.benar { background-color: #E6F9F3; color: #10B981; }
+        body.completed .stat-box.salah { background-color: #FEE2E2; color: #DC2626; }
+        body.completed .stat-box.kosong { background-color: #F0FDF4; color: #22C55E; }
+
+        .stat-num { font-size: 22px; font-weight: bold; }
+        .stat-label { font-size: 12px; color: #555; margin-top: 4px;}
+
+        .sync-alert {
+            background-color: #E6F9F3;
+            color: #10B981;
+            border: 1px solid #A7F3D0;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .sync-alert.not-completed {
+            background-color: #FEE2E2;
+            color: #DC2626;
+            border: 1px solid #FECACA;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-pink { background-color: #FF4A7A; color: white; }
+        .btn-pink:hover { background-color: #E03E67; }
+        .btn-gray { background-color: #6C757D; color: white; }
+        .btn-gray:hover { background-color: #5A6268; }
+        .btn-green { background-color: #10B981; color: white; }
+        .btn-green:hover { background-color: #059669; }
+        .btn-full { width: 75%; }
+
+        /* --- CARD FOTO 2: HASIL UJIAN TRYOUT SKD --- */
+        .card-detail {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 35px 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .card-detail h3 {
+            text-align: center;
+            color: #34495E;
+            font-size: 22px;
+            margin-bottom: 20px;
+        }
+
+        .alert-failed {
+            background-color: #FCE8E6;
+            color: #A82315;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .alert-success {
+            background-color: #E6F9F3;
+            color: #10B981;
+            text-align: center;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 15px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            display: none;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 13.5px;
+        }
+
+        th, td {
+            border: 1px solid #E2E8F0;
+            padding: 14px 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #EDF2F7;
+            color: #4A5568;
+            font-weight: bold;
+        }
+
+        body.completed th {
+            background-color: #E6F9F3;
+        }
+
+        td.materi-name {
+            text-align: left;
+            color: #4A5568;
+        }
+
+        .text-bold { font-weight: bold; }
+        .text-blue { color: #2B6CB0; }
+        .text-red { color: #E53E3E; font-weight: bold; }
+        .text-green { color: #10B981; font-weight: bold; display: none; }
+
+        tr.total-row {
+            background-color: #F7FAFC;
+        }
+
+        body.completed tr.total-row {
+            background-color: #E6F9F3;
+        }
+
+        /* --- MODAL UTAMA & OVERLAY --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 600px;
+            border-radius: 15px;
+            padding: 30px 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        .badge-pink {
+            background: #FFF0F3;
+            color: #FF4A7A;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        body.completed .badge-pink {
+            background: #E6F9F3;
+            color: #10B981;
+        }
+
+        .modal-content h2 {
+            color: #FF4A7A;
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        body.completed .modal-content h2 {
+            color: #10B981;
+        }
+
+        .modal-content p.desc {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+
+        /* --- DAFTAR ANALISIS (FOTO 1) --- */
+        .analysis-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 15px 10px;
+            border-bottom: 1px solid #EDF2F7;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
+
+        .analysis-item:hover {
+            background-color: #FFF0F3;
+        }
+
+        body.completed .analysis-item:hover {
+            background-color: #E6F9F3;
+        }
+
+        .analysis-info h4 {
+            font-size: 14px;
+            color: #2D3748;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .analysis-info p {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 4px;
+        }
+
+        .analysis-score {
+            font-size: 15px;
+            font-weight: bold;
+            color: #2D3748;
+        }
+        .score-highlight { color: #E53E3E; }
+
+        body.completed .score-highlight { color: #10B981; }
+
+        .modal-footer {
+            margin-top: 25px;
+            display: flex;
+            gap: 10px;
+        }
+        .modal-footer .btn { flex: 1; text-align: center; }
+
+        /* --- MODAL BARU: PEMBAHASAN SOAL --- */
+        .modal-soal-content {
+            background: white;
+            width: 100%;
+            max-width: 700px;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .soal-header-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .soal-stat-box {
+            padding: 15px;
+            border-radius: 12px;
+        }
+        .soal-stat-box.benar { background-color: #FFF0F3; color: #2D3748; }
+        .soal-stat-box.salah { background-color: #FFF0F3; color: #2D3748; }
+        .soal-stat-box.kosong { background-color: #FFF0F3; color: #2D3748; }
+
+        body.completed .soal-stat-box.benar { background-color: #E6F9F3; }
+        body.completed .soal-stat-box.salah { background-color: #FEE2E2; }
+        body.completed .soal-stat-box.kosong { background-color: #F0FDF4; }
+        
+        .soal-stat-title { font-size: 14px; font-weight: bold; color: #2D3748; margin-bottom: 5px; }
+        .soal-stat-count { font-size: 14px; color: #718096; }
+
+        .pembahasan-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2D3748;
+            margin-bottom: 15px;
+        }
+
+        .soal-container {
+            border: 1px solid #EDF2F7;
+            border-radius: 15px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        .soal-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .soal-number {
+            font-size: 16px;
+            font-weight: bold;
+            color: #2D3748;
+        }
+
+        .soal-status-tag {
+            color: #E53E3E;
+            font-weight: bold;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .soal-text {
+            font-size: 14.5px;
+            line-height: 1.6;
+            color: #4A5568;
+            margin-bottom: 20px;
+        }
+
+        /* Pilihan Jawaban */
+        .opsi-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .opsi-item {
+            padding: 14px 18px;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #4A5568;
+        }
+
+        .opsi-item.salah-pilihan {
+            background-color: #FCE8E6;
+            border-color: #FEB2B2;
+        }
+
+        .opsi-item.benar-pilihan {
+            background-color: #E6F4EA;
+            border-color: #A7F3D0;
+        }
+
+        .btn-close-soal {
+            margin-top: 20px;
+            width: 100%;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- TAMPILAN UTAMA (FOTO 3) -->
+        <div class="card-summary">
+            <div class="circle-score" id="circleScore">3</div>
+            <h2>Hasil Try Out</h2>
+            <p class="subtitle" id="subtitleText">Tryout SKD • Hasil Anda</p>
+            
+            <div class="stats-grid">
+                <div class="stat-box benar">
+                    <div class="stat-num" id="benarCount">0</div>
+                    <div class="stat-label">Benar</div>
+                </div>
+                <div class="stat-box salah">
+                    <div class="stat-num" id="salahCount">1</div>
+                    <div class="stat-label">Salah</div>
+                </div>
+                <div class="stat-box kosong">
+                    <div class="stat-num" id="kosongCount">109</div>
+                    <div class="stat-label">Kosong</div>
+                </div>
+            </div>
+
+            <div class="sync-alert not-completed" id="syncAlert">
+                <span>⚠️</span> Belum Ada Data Tryout
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-pink" onclick="window.location.href='halamansiswa.html'">Kembali ke Dashboard</button>
+                <button class="btn btn-gray" id="btnAnalisis" onclick="openModal()" style="display:none;">Lihat Analisis Jawaban</button>
+                <button class="btn btn-gray btn-full" id="btnDownload" style="display:none;">Download Soal (Drive)</button>
+            </div>
+        </div>
+
+        <!-- TAMPILAN JIKA DI-SCROLL KE BAWAH (FOTO 2) -->
+        <div class="card-detail" id="cardDetail" style="display:none;">
+            <h3>Hasil Ujian Tryout SKD</h3>
+            <div class="alert-failed" id="alertFailed">
+                MAAF! ANDA BELUM MEMENUHI PASSING GRADE
+            </div>
+            <div class="alert-success" id="alertSuccess">
+                SELAMAT! ANDA TELAH MEMENUHI PASSING GRADE
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Materi</th>
+                        <th>Skor Anda</th>
+                        <th>Passing Grade</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td class="materi-name">Tes Wawasan Kebangsaan (TWK)</td>
+                        <td class="text-bold text-blue" id="skorTWK">0</td>
+                        <td>65</td>
+                        <td class="text-red" id="ketTWK">TIDAK MEMENUHI</td>
+                    </tr>
+                    <tr>
+                        <td class="materi-name">Tes Inteligensia Umum (TIU)</td>
+                        <td class="text-bold text-blue" id="skorTIU">0</td>
+                        <td>80</td>
+                        <td class="text-red" id="ketTIU">TIDAK MEMENUHI</td>
+                    </tr>
+                    <tr>
+                        <td class="materi-name">Tes Karakteristik Pribadi (TKP)</td>
+                        <td class="text-bold text-blue" id="skorTKP">0</td>
+                        <td>166</td>
+                        <td class="text-red" id="ketTKP">TIDAK MEMENUHI</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td class="materi-name text-bold">TOTAL SKOR AKHIR SKD</td>
+                        <td class="text-bold text-blue" id="totalSkor">0</td>
+                        <td class="text-bold">311</td>
+                        <td class="text-red" id="ketTotal">GAGAL</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- MODAL POP-UP ANALISIS (FOTO 1) -->
+    <div class="modal-overlay" id="analisisModal">
+        <div class="modal-content">
+            <span class="badge-pink">Analisis Jawaban</span>
+            <h2>Analisis Detil Tryout</h2>
+            <p class="desc">Lihat ringkasan skor dan pembahasan jawaban per kategori secara terpisah. (Klik kategori untuk detail soal)</p>
+
+            <!-- Item TWK (Bisa di klik) -->
+            <div class="analysis-item" onclick="openModalSoal('TWK')">
+                <div class="analysis-info">
+                    <h4>📌 TES WAWASAN KEBANGSAAN (TWK)</h4>
+                    <p>Ringkasan pengerjaan & pembahasan</p>
+                </div>
+                <div class="analysis-score"><span class="score-highlight" id="scoreTWK">0</span> / 150</div>
+            </div>
+
+            <!-- Item TIU (Bisa di klik) -->
+            <div class="analysis-item" onclick="openModalSoal('TIU')">
+                <div class="analysis-info">
+                    <h4>📊 TES INTELIGENSIA UMUM (TIU)</h4>
+                    <p>Ringkasan pengerjaan & pembahasan</p>
+                </div>
+                <div class="analysis-score"><span class="score-highlight" id="scoreTIU">0</span> / 175</div>
+            </div>
+
+            <!-- Item TKP (Bisa di klik) -->
+            <div class="analysis-item" onclick="openModalSoal('TKP')">
+                <div class="analysis-info">
+                    <h4>🧠 TES KARAKTERISTIK PRIBADI (TKP)</h4>
+                    <p>Ringkasan pengerjaan & pembahasan</p>
+                </div>
+                <div class="analysis-score"><span class="score-highlight" id="scoreTKP">3</span> / 225</div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-gray" onclick="closeModal()">Kembali ke Hasil</button>
+                <button class="btn btn-pink" id="btnDownloadModal">Download Soal (Drive)</button>
+                <button class="btn btn-pink" onclick="window.location.href='halamansiswa.html'">Kembali ke Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POP-UP PEMBAHASAN SOAL (FOTO BARU) -->
+    <div class="modal-overlay" id="soalModal">
+        <div class="modal-soal-content">
+            
+            <!-- Grid Atas: Info Jumlah Soal -->
+            <div class="soal-header-grid">
+                <div class="soal-stat-box benar">
+                    <div class="soal-stat-title">Jawaban Benar</div>
+                    <div class="soal-stat-count" id="countBenar">0 soal</div>
+                </div>
+                <div class="soal-stat-box salah">
+                    <div class="soal-stat-title">Jawaban Salah</div>
+                    <div class="soal-stat-count" id="countSalah">3 soal</div>
+                </div>
+                <div class="soal-stat-box kosong">
+                    <div class="soal-stat-title">Tidak Diisi</div>
+                    <div class="soal-stat-count" id="countKosong">27 soal</div>
+                </div>
+            </div>
+
+            <div class="pembahasan-title" id="pembahasanTitle">Pembahasan Soal TWK</div>
+
+            <!-- Box Konten Soal -->
+            <div class="soal-container">
+                <div class="soal-meta">
+                    <div class="soal-number">Soal No. 1</div>
+                    <div class="soal-status-tag">❌ Salah (Skor: 0)</div>
+                </div>
+                
+                <div class="soal-text" id="soalText">
+                    Indonesia dikenal sebagai negara yang memiliki keberagaman suku, agama, ras, budaya, dan bahasa. Keberagaman tersebut menjadi salah satu kekuatan bangsa apabila setiap warga negara...
+                </div>
+
+                <div class="opsi-list">
+                    <div class="opsi-item salah-pilihan">
+                        A. Mendukung kebijakan yang menguntungkan daerah asal meskipun bertentangan dengan kepentingan nasional
+                    </div>
+                    <div class="opsi-item">
+                        B. Mengutamakan kepentingan kelompok sendiri karena lebih memahami kebutuhan anggotanya dibandingakan masyarakat luas
+                    </div>
+                    <div class="opsi-item benar-pilihan">
+                        C. Menghargai setiap perbedaan, membangun kerja sama dengan siapa pun, serta menempatkan kepentingan bangsa di atas kepentingan pribadi maupun golongan
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-gray btn-close-soal" onclick="closeModalSoal()">Kembali ke Analisis</button>
+        </div>
+    </div>
+
+    <script>
+        // Data penyimpanan hasil try out di localStorage
+        let tryoutData = {
+            completed: false,
+            score: 0,
+            benar: 0,
+            salah: 0,
+            kosong: 0,
+            scoreTWK: 0,
+            scoreTIU: 0,
+            scoreTKP: 0,
+            passed: false
+        };
+
+        // Ambil data dari URL parameter (id)
+        const urlParams = new URLSearchParams(window.location.search);
+        const tryoutId = urlParams.get('id') || '1';
+
+        // Muat data dari localStorage
+        function loadTryoutData() {
+            const storedData = localStorage.getItem(`tryout_${tryoutId}`);
+            if (storedData) {
+                tryoutData = JSON.parse(storedData);
+                renderPage();
+            } else {
+                // Jika belum ada data, tampilkan tampilan "belum try out"
+                renderEmptyPage();
+            }
+        }
+
+        function renderEmptyPage() {
+            document.body.classList.remove('completed');
+            document.getElementById('circleScore').innerText = '-';
+            document.getElementById('subtitleText').innerText = 'Belum Ada Data Tryout';
+            document.getElementById('syncAlert').innerText = '⚠️ Belum Ada Data Tryout';
+            document.getElementById('syncAlert').classList.add('not-completed');
+            document.getElementById('btnAnalisis').style.display = 'none';
+            document.getElementById('btnDownload').style.display = 'none';
+            document.getElementById('cardDetail').style.display = 'none';
+        }
+
+        function renderPage() {
+            if (tryoutData.completed) {
+                // Jika sudah try out - ubah tema ke hijau
+                document.body.classList.add('completed');
+                document.getElementById('circleScore').innerText = tryoutData.score;
+                document.getElementById('subtitleText').innerText = tryoutData.passed ? 'Lulus ✓' : 'Tidak Lulus';
+                document.getElementById('syncAlert').innerHTML = '✅ Data berhasil disinkronisasi ke Cloud Server!';
+                document.getElementById('syncAlert').classList.remove('not-completed');
+                document.getElementById('btnAnalisis').style.display = 'inline-block';
+                document.getElementById('btnDownload').style.display = 'inline-block';
+                document.getElementById('cardDetail').style.display = 'block';
+
+                // Update stats
+                document.getElementById('benarCount').innerText = tryoutData.benar;
+                document.getElementById('salahCount').innerText = tryoutData.salah;
+                document.getElementById('kosongCount').innerText = tryoutData.kosong;
+
+                // Update scores
+                document.getElementById('skorTWK').innerText = tryoutData.scoreTWK;
+                document.getElementById('skorTIU').innerText = tryoutData.scoreTIU;
+                document.getElementById('skorTKP').innerText = tryoutData.scoreTKP;
+                document.getElementById('totalSkor').innerText = tryoutData.score;
+
+                // Update analysis scores
+                document.getElementById('scoreTWK').innerText = tryoutData.scoreTWK;
+                document.getElementById('scoreTIU').innerText = tryoutData.scoreTIU;
+                document.getElementById('scoreTKP').innerText = tryoutData.scoreTKP;
+
+                // Update status
+                if (tryoutData.passed) {
+                    document.getElementById('alertFailed').style.display = 'none';
+                    document.getElementById('alertSuccess').style.display = 'block';
+                    
+                    document.getElementById('ketTWK').innerText = 'MEMENUHI';
+                    document.getElementById('ketTWK').classList.remove('text-red');
+                    document.getElementById('ketTWK').classList.add('text-green');
+                    document.getElementById('ketTWK').style.display = 'inline';
+
+                    document.getElementById('ketTIU').innerText = 'MEMENUHI';
+                    document.getElementById('ketTIU').classList.remove('text-red');
+                    document.getElementById('ketTIU').classList.add('text-green');
+                    document.getElementById('ketTIU').style.display = 'inline';
+
+                    document.getElementById('ketTKP').innerText = 'MEMENUHI';
+                    document.getElementById('ketTKP').classList.remove('text-red');
+                    document.getElementById('ketTKP').classList.add('text-green');
+                    document.getElementById('ketTKP').style.display = 'inline';
+
+                    document.getElementById('ketTotal').innerText = 'LULUS';
+                    document.getElementById('ketTotal').classList.remove('text-red');
+                    document.getElementById('ketTotal').classList.add('text-green');
+                    document.getElementById('ketTotal').style.display = 'inline';
+                } else {
+                    document.getElementById('alertFailed').style.display = 'block';
+                    document.getElementById('alertSuccess').style.display = 'none';
+                    document.getElementById('ketTWK').classList.add('text-red');
+                    document.getElementById('ketTIU').classList.add('text-red');
+                    document.getElementById('ketTKP').classList.add('text-red');
+                    document.getElementById('ketTotal').classList.add('text-red');
+                }
+            } else {
+                renderEmptyPage();
+            }
+        }
+
+        // Modal functions
+        function openModal() {
+            document.getElementById('analisisModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('analisisModal').style.display = 'none';
+        }
+
+        function openModalSoal(kategori) {
+            document.getElementById('analisisModal').style.display = 'none';
+            document.getElementById('pembahasanTitle').innerText = "Pembahasan Soal " + kategori;
+            
+            if(kategori === 'TKP') {
+                document.getElementById('countBenar').innerText = "1 soal";
+                document.getElementById('countSalah').innerText = "2 soal";
+                document.getElementById('countKosong').innerText = "42 soal";
+                document.getElementById('soalText').innerText = "[Contoh Soal TKP] Saat menghadiri rapat kerja, rekan kerja Anda mengkritik ide Anda dengan tajam di depan pimpinan. Sikap Anda adalah...";
+            } else if(kategori === 'TIU') {
+                document.getElementById('countBenar').innerText = "0 soal";
+                document.getElementById('countSalah').innerText = "5 soal";
+                document.getElementById('countKosong').innerText = "30 soal";
+                document.getElementById('soalText').innerText = "[Contoh Soal TIU] Sebuah mobil menempuh jarak 120 km dengan kecepatan 60 km/jam. Jika kecepatan dinaikkan menjadi 80 km/jam, berapa waktu yang diperlukan...";
+            } else {
+                document.getElementById('countBenar').innerText = "0 soal";
+                document.getElementById('countSalah').innerText = "3 soal";
+                document.getElementById('countKosong').innerText = "27 soal";
+                document.getElementById('soalText').innerText = "Indonesia dikenal sebagai negara yang memiliki keberagaman suku, agama, ras, budaya, dan bahasa. Keberagaman tersebut menjadi salah satu kekuatan bangsa...";
+            }
+
+            document.getElementById('soalModal').style.display = 'flex';
+        }
+
+        function closeModalSoal() {
+            document.getElementById('soalModal').style.display = 'none';
+            document.getElementById('analisisModal').style.display = 'flex';
+        }
+
+        window.onclick = function(event) {
+            const analisisModal = document.getElementById('analisisModal');
+            const soalModal = document.getElementById('soalModal');
+            
+            if (event.target == analisisModal) {
+                analisisModal.style.display = 'none';
+            }
+            if (event.target == soalModal) {
+                soalModal.style.display = 'none';
+            }
+        }
+
+        // Load data on page load
+        window.addEventListener('load', loadTryoutData);
+    </script>
+</body>
+</html> 

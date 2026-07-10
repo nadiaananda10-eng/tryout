@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexora Academy - SKD</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background-color: #fbd6e6; min-height: 100vh; }
+        .navbar { background-color: #e56ba3; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #000000; }
+        .logo-area { display: flex; align-items: center; gap: 12px; }
+        .logo-img { width: 45px; height: 45px; object-fit: contain; }
+        .logo-text { color: #ffffff; font-size: 1.4rem; font-weight: 700; letter-spacing: 1px; }
+        .nav-menu { display: flex; gap: 20px; }
+        .nav-btn { padding: 8px 35px; border: 2px solid #000000; border-radius: 20px; font-weight: 600; text-decoration: none; color: #000000; font-size: 0.95rem; box-shadow: 0 4px 0px #000000; transition: all 0.1s ease; }
+        .nav-btn.active { background-color: #fca1d9; }
+        .nav-btn.white { background-color: #ffffff; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .header-card { background-color: #fff8fa; border: 2px solid #000000; border-radius: 24px; padding: 30px 40px; margin-bottom: 30px; box-shadow: 0 6px 0px rgba(0,0,0,0.05); }
+        .breadcrumb { color: #ff60b5; font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; }
+        .header-title { color: #ff60b5; font-size: 3rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .to-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 25px; }
+        .to-card { background-color: #ffffff; border: 3px solid #000000; border-radius: 20px; padding: 25px; box-shadow: 0 6px 0px rgba(0,0,0,0.05); display: flex; flex-direction: column; gap: 12px; }
+        .to-title { font-size: 1.5rem; font-weight: 700; color: #1e293b; }
+        .to-date { font-size: 0.95rem; color: #64748b; margin-bottom: 5px; }
+        .to-details { display: flex; gap: 20px; font-size: 1rem; font-weight: 600; color: #334155; margin-bottom: 10px; }
+        .to-details i { color: #475569; margin-right: 5px; }
+        .btn-action { width: 100%; padding: 14px; background-color: #ff528c; border: 2px solid #000000; border-radius: 12px; font-size: 1.1rem; font-weight: 700; color: #ffffff; cursor: pointer; box-shadow: 0 4px 0px #000000; transition: all 0.1s ease; }
+        .btn-action:active { transform: translateY(3px); box-shadow: 0 1px 0px #000000; }
+        .to-card.completed { border-left: 12px solid #2a7a5c; }
+        .to-card.completed .btn-action { background-color: #2a7a5c; }
+        @media (max-width: 768px) { .navbar { flex-direction: column; gap: 15px; } .header-title { font-size: 2rem; } .to-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo-area">
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.opacity='0'">
+            <span class="logo-text">NEXORA ACADEMY</span>
+        </div>
+        <div class="nav-menu">
+            <a href="halamansiswa.html" class="nav-btn white">Beranda</a>
+            <a href="informasi.html" class="nav-btn white">Informasi</a>
+            <a href="kontak.html" class="nav-btn white">Kontak</a>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="header-card">
+            <div class="breadcrumb">Nexora Academy - SKD</div>
+            <h1 class="header-title">Seleksi Kompetensi Dasar</h1>
+        </div>
+        <div class="to-grid" id="tryoutContainer"></div>
+    </div>
+    <script>
+        const daftarTryout = [
+            { id: 1, judul: "Tryout SKD 1", tanggal: "Sabtu, 18 Juli 2026", jumlahSoal: 110, durasi: 100, sudahSelesai: false },
+            { id: 2, judul: "Tryout SKD 2", tanggal: "Kamis, 23 Juli 2026", jumlahSoal: 110, durasi: 100, sudahSelesai: false },
+            { id: 3, judul: "Tryout SKD 3", tanggal: "Rabu, 29 Juli 2026", jumlahSoal: 110, durasi: 100, sudahSelesai: true },
+            { id: 4, judul: "Tryout SKD 4", tanggal: "Selasa, 4 Agustus 2026", jumlahSoal: 110, durasi: 100, sudahSelesai: false },
+            { id: 5, judul: "Tryout SKD 5", tanggal: "Senin, 10 Agustus 2026", jumlahSoal: 110, durasi: 100, sudahSelesai: false }
+        ];
+        const container = document.getElementById('tryoutContainer');
+        daftarTryout.forEach(to => {
+            const card = document.createElement('div');
+            card.className = `to-card ${to.sudahSelesai ? 'completed' : ''}`;
+            const teksTombol = to.sudahSelesai ? "Hasil Try Out →" : "Pilih Paket →";
+            const fungsiKlik = to.sudahSelesai ? `lihatHasil(${to.id})` : `bukaMulaiTryout(${to.id})`;
+            card.innerHTML = `
+                <h2 class="to-title">${to.judul}</h2>
+                <p class="to-date">${to.tanggal}</p>
+                <div class="to-details">
+                    <span><i class="fa-regular fa-file-lines"></i> ${to.jumlahSoal} Soal</span>
+                    <span><i class="fa-regular fa-clock"></i> ${to.durasi} Menit</span>
+                </div>
+                <button class="btn-action" onclick="${fungsiKlik}">${teksTombol}</button>
+            `;
+            container.appendChild(card);
+        });
+        function bukaMulaiTryout(id) {
+            const paket = daftarTryout.find(p => p.id === id);
+            window.location.href = `awaltryout.html?nama=${encodeURIComponent(paket.judul)}&kategori=skd`;
+        }
+        function lihatHasil(id) {
+            window.location.href = `hasiltryout.html?id=${id}`;
+        }
+    </script>
+</body>
+</html>
